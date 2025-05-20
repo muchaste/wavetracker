@@ -325,6 +325,10 @@ def connect_with_overlap(fund_v, ident_v, valid_v, idx_v, times):
 
         connections_candidates.append([id0, id1, mean_freq_dist])
 
+    # If no candidates for connection, return early:
+    if len(connections_candidates) == 0:
+        return ident_v
+        
     connections_candidates = np.array(connections_candidates)
 
     for pair_no in np.argsort(connections_candidates[:, 2]):
