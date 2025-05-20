@@ -1170,26 +1170,24 @@ class MainWindow(QMainWindow):
         self.cb_channel.setEnabled(True)
         self.cb_SCH_MCH.setEnabled(True)
 
-        if os.path.exists(os.path.join(self.folder, "all_fund_v.npy")):
-            self.all_fund_v = np.load(
-                os.path.join(self.folder, "all_fund_v.npy")
-            )
-            self.all_sign_v = np.load(
-                os.path.join(self.folder, "all_sign_v.npy")
-            )
-            self.all_idx_v = np.load(
-                os.path.join(self.folder, "all_idx_v.npy")
-            )
-            self.all_ident_v = np.load(
-                os.path.join(self.folder, "all_ident_v.npy")
-            )
-            self.times = np.load(os.path.join(self.folder, "all_times.npy"))
-            self.all_spectra = np.load(
-                os.path.join(self.folder, "all_spec.npy")
-            )
-            self.start_time, self.end_time = np.load(
-                os.path.join(self.folder, "meta.npy")
-            )
+        # Helper: Try to find files in folder, else in 'recordings' subfolder
+        def find_file(filename):
+            path = os.path.join(self.folder, filename)
+            if os.path.exists(path):
+                return path
+            rec_path = os.path.join(self.folder, "recordings", filename)
+            if os.path.exists(rec_path):
+                return rec_path
+            return path  # fallback
+
+        if os.path.exists(find_file("all_fund_v.npy")):
+            self.all_fund_v = np.load(find_file("all_fund_v.npy"))
+            self.all_sign_v = np.load(find_file("all_sign_v.npy"))
+            self.all_idx_v = np.load(find_file("all_idx_v.npy"))
+            self.all_ident_v = np.load(find_file("all_ident_v.npy"))
+            self.times = np.load(find_file("all_times.npy"))
+            self.all_spectra = np.load(find_file("all_spec.npy"))
+            self.start_time, self.end_time = np.load(find_file("meta.npy"))
 
             self.fund_v = self.all_fund_v[0]
             self.sign_v = self.all_sign_v[0]
@@ -1199,23 +1197,19 @@ class MainWindow(QMainWindow):
             self.cb_SCH_MCH.setCurrentIndex(0)
             self.got_single_channel = True
 
-        if os.path.exists(os.path.join(self.folder, "fund_v.npy")):
-            self.fund_v = np.load(os.path.join(self.folder, "fund_v.npy"))
-            self.sign_v = np.load(os.path.join(self.folder, "sign_v.npy"))
-            self.idx_v = np.load(os.path.join(self.folder, "idx_v.npy"))
-            self.ident_v = np.load(os.path.join(self.folder, "ident_v.npy"))
-            self.times = np.load(os.path.join(self.folder, "times.npy"))
+        if os.path.exists(find_file("fund_v.npy")):
+            self.fund_v = np.load(find_file("fund_v.npy"))
+            self.sign_v = np.load(find_file("sign_v.npy"))
+            self.idx_v = np.load(find_file("idx_v.npy"))
+            self.ident_v = np.load(find_file("ident_v.npy"))
+            self.times = np.load(find_file("times.npy"))
             try:
-                self.spectra = np.load(os.path.join(self.folder, "spec.npy"))
+                self.spectra = np.load(find_file("spec.npy"))
             except:
-                self.spectra = np.load(
-                    os.path.join(self.folder, "sparse_spectra.npy")
-                )
+                self.spectra = np.load(find_file("sparse_spectra.npy"))
 
             try:
-                self.start_time, self.end_time = np.load(
-                    os.path.join(self.folder, "meta.npy")
-                )
+                self.start_time, self.end_time = np.load(find_file("meta.npy"))
             except:
                 self.start_time, self.end_time = self.times[0], self.times[-1]
             self.cb_SCH_MCH.setCurrentIndex(1)
@@ -1223,35 +1217,23 @@ class MainWindow(QMainWindow):
             self.got_multi_channel = True
             self.rec_datetime = get_datetime(self.folder)
 
-        if os.path.exists(os.path.join(self.folder, "fill_spec.npy")):
-            self.fill_freqs = np.load(
-                os.path.join(self.folder, "fill_freqs.npy")
-            )
-            self.fill_times = np.load(
-                os.path.join(self.folder, "fill_times.npy")
-            )
-            self.fill_spec_shape = np.load(
-                os.path.join(self.folder, "fill_spec_shape.npy")
-            )
+        if os.path.exists(find_file("fill_spec.npy")):
+            self.fill_freqs = np.load(find_file("fill_freqs.npy"))
+            self.fill_times = np.load(find_file("fill_times.npy"))
+            self.fill_spec_shape = np.load(find_file("fill_spec_shape.npy"))
             self.fill_spec = np.memmap(
-                os.path.join(self.folder, "fill_spec.npy"),
+                find_file("fill_spec.npy"),
                 dtype="float",
                 mode="r",
                 shape=(self.fill_spec_shape[0], self.fill_spec_shape[1]),
                 order="F",
             )
 
-            self.Plot.fill_freqs = np.load(
-                os.path.join(self.folder, "fill_freqs.npy")
-            )
-            self.Plot.fill_times = np.load(
-                os.path.join(self.folder, "fill_times.npy")
-            )
-            self.Plot.fill_spec_shape = np.load(
-                os.path.join(self.folder, "fill_spec_shape.npy")
-            )
+            self.Plot.fill_freqs = np.load(find_file("fill_freqs.npy"))
+            self.Plot.fill_times = np.load(find_file("fill_times.npy"))
+            self.Plot.fill_spec_shape = np.load(find_file("fill_spec_shape.npy"))
             self.Plot.fill_spec = np.memmap(
-                os.path.join(self.folder, "fill_spec.npy"),
+                find_file("fill_spec.npy"),
                 dtype="float",
                 mode="r",
                 shape=(self.fill_spec_shape[0], self.fill_spec_shape[1]),
@@ -1260,35 +1242,23 @@ class MainWindow(QMainWindow):
             self.Act_fine_spec.setEnabled(True)
             self.Act_interactive_sel.setEnabled(True)
 
-        elif os.path.exists(os.path.join(self.folder, "fine_spec.npy")):
-            self.fill_freqs = np.load(
-                os.path.join(self.folder, "fine_freqs.npy")
-            )
-            self.fill_times = np.load(
-                os.path.join(self.folder, "fine_times.npy")
-            )
-            self.fill_spec_shape = np.load(
-                os.path.join(self.folder, "fine_spec_shape.npy")
-            )
+        elif os.path.exists(find_file("fine_spec.npy")):
+            self.fill_freqs = np.load(find_file("fine_freqs.npy"))
+            self.fill_times = np.load(find_file("fine_times.npy"))
+            self.fill_spec_shape = np.load(find_file("fine_spec_shape.npy"))
             self.fill_spec = np.memmap(
-                os.path.join(self.folder, "fine_spec.npy"),
+                find_file("fine_spec.npy"),
                 dtype="float",
                 mode="r",
                 shape=(self.fill_spec_shape[0], self.fill_spec_shape[1]),
                 order="F",
             )
 
-            self.Plot.fill_freqs = np.load(
-                os.path.join(self.folder, "fine_freqs.npy")
-            )
-            self.Plot.fill_times = np.load(
-                os.path.join(self.folder, "fine_times.npy")
-            )
-            self.Plot.fill_spec_shape = np.load(
-                os.path.join(self.folder, "fine_spec_shape.npy")
-            )
+            self.Plot.fill_freqs = np.load(find_file("fine_freqs.npy"))
+            self.Plot.fill_times = np.load(find_file("fine_times.npy"))
+            self.Plot.fill_spec_shape = np.load(find_file("fine_spec_shape.npy"))
             self.Plot.fill_spec = np.memmap(
-                os.path.join(self.folder, "fine_spec.npy"),
+                find_file("fine_spec.npy"),
                 dtype="float",
                 mode="r",
                 shape=(self.fill_spec_shape[0], self.fill_spec_shape[1]),
