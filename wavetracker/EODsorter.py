@@ -660,9 +660,9 @@ class MainWindow(QMainWindow):
         self.Act_interactive_sel.setCheckable(True)
         self.Act_interactive_sel.setEnabled(False)
 
-        # self.Act_interactive_con = QAction(QIcon('./gui_sym/con.png'), 'Connect', self)
+        # self.Act_interactive_con = QAction(QIcon('./gui_sym/conn.png'), 'Connect', self)
         self.Act_interactive_con = QAction(
-            QIcon(os.path.join(package_dir, "gui_sym", "con.png")),
+            QIcon(os.path.join(package_dir, "gui_sym", "conn.png")),
             "Connect",
             self,
         )
