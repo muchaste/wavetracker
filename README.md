@@ -245,11 +245,11 @@ plt.show()
 
   ```bash
   dataset/
-  ├── 2024-01-01_12-34/
+  ├── 2024-01-01-12_34/
   │   └── recordings/
-  │       ├── 2024-01-01_12-34.wav
-  │       ├── 2024-01-01_12-35.wav
-  │       ├── 2024-01-01_12-36.wav
+  │       ├── 2024-01-01-12_34.wav
+  │       ├── 2024-01-01-12_35.wav
+  │       ├── 2024-01-01-12_36.wav
   │       └── ...
   └── ...
   ```
@@ -257,7 +257,7 @@ plt.show()
   - **`dataset/`**  
     Top-level folder where each recording session is stored in a subfolder.
     
-  - **`2024-01-01_12-34/`**  
+  - **`2024-01-01-12_34/`**  
     Example subfolder named by date and time. This helps identify individual recording sessions.
     
   - **`recordings/`**  
